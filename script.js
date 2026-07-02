@@ -26,3 +26,19 @@ addButton.addEventListener("click", function () {
     document.getElementById("department").value = "";
     document.getElementById("age").value = "";
 });
+const searchInput = document.getElementById("search");
+
+searchInput.addEventListener("keyup", function () {
+    const filter = searchInput.value.toLowerCase();
+    const rows = document.querySelectorAll("#studentList tr");
+
+    rows.forEach((row) => {
+        const name = row.cells[0].textContent.toLowerCase();
+
+        if (name.includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
