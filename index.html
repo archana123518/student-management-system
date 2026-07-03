@@ -8,33 +8,40 @@
 </head>
 <body>
 
-    <h1>Student Management System</h1>
-
     <div class="container">
-        <input type="text" id="name" placeholder="Student Name">
-        <input type="text" id="department" placeholder="Department">
-        <input type="number" id="age" placeholder="Age">
+        <h1>Student Management System</h1>
 
-        <input type="text" id="search" placeholder="search student">
-        <button>Add Student</button>
+        <!-- Input Section -->
+        <div class="form">
+            <input type="text" id="name" placeholder="Enter Name">
+            <input type="text" id="department" placeholder="Enter Department">
+            <input type="number" id="age" placeholder="Enter Age">
 
+            <button id="addBtn">Add Student</button>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search student...">
+        </div>
+
+        <!-- Table Section -->
         <table>
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Department</th>
                     <th>Age</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
-
             <tbody id="studentList">
-
+                <!-- Dynamic data will appear here -->
             </tbody>
         </table>
+
     </div>
 
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>

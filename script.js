@@ -1,44 +1,97 @@
-const addButton = document.querySelector("button");
-const studentList = document.getElementById("studentList");
+let addBtn = document.getElementById("addBtn");
+let studentList = document.getElementById("studentList");
+let searchInput = document.getElementById("search");
 
-addButton.addEventListener("click", function () {
-    const name = document.getElementById("name").value;
-    const department = document.getElementById("department").value;
-    const age = document.getElementById("age").value;
+let students = [];
+let editIndex = -1;
+
+/* Load from Local Storage */
+window.onload = function () {
+    if (localStorage.getItem("students")) {
+        students = JSON.parse(localStorage.getItem("students"));
+        displayStudents();
+    }
+};
+
+/* Save to Local Storage */
+function saveToLocalStorage() {
+    localStorage.setItem("students", JSON.stringify(students));
+}
+
+/* Display Students */
+function displayStudents(data = students) {
+    studentList.innerHTML = "";
+
+    data.forEach((student, index) => {
+        studentList.innerHTML += `
+            <tr>
+                <td>${student.name}</td>
+                <td>${student.department}</td>
+                <td>${student.age}</td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="editStudent(${index})">Edit</button>
+                    <button class="action-btn delete-btn" onclick="deleteStudent(${index})">Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+/* Add / Update Student */
+addBtn.addEventListener("click", function () {
+    let name = document.getElementById("name").value;
+    let department = document.getElementById("department").value;
+    let age = document.getElementById("age").value;
 
     if (name === "" || department === "" || age === "") {
-        alert("Please fill all fields");
+        alert("All fields are required!");
         return;
     }
 
-    const row = document.createElement("tr");
+    let student = { name, department, age };
 
-    row.innerHTML = `
-        <td>${name}</td>
-        <td>${department}</td>
-        <td>${age}</td>
-        <td><button onclick="this.parentElement.parentElement.remove()">Delete</button></td>
-    `;
+    if (editIndex === -1) {
+        students.push(student);
+    } else {
+        students[editIndex] = student;
+        editIndex = -1;
+        addBtn.innerText = "Add Student";
+    }
 
-    studentList.appendChild(row);
+    saveToLocalStorage();
+    displayStudents();
 
     document.getElementById("name").value = "";
     document.getElementById("department").value = "";
     document.getElementById("age").value = "";
 });
-const searchInput = document.getElementById("search");
 
-searchInput.addEventListener("keyup", function () {
-    const filter = searchInput.value.toLowerCase();
-    const rows = document.querySelectorAll("#studentList tr");
+/* Delete Student */
+function deleteStudent(index) {
+    students.splice(index, 1);
+    saveToLocalStorage();
+    displayStudents();
+}
 
-    rows.forEach((row) => {
-        const name = row.cells[0].textContent.toLowerCase();
+/* Edit Student */
+function editStudent(index) {
+    document.getElementById("name").value = students[index].name;
+    document.getElementById("department").value = students[index].department;
+    document.getElementById("age").value = students[index].age;
 
-        if (name.includes(filter)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    });
+    editIndex = index;
+    addBtn.innerText = "Update Student";
+}
+
+/* Search Student */
+searchInput.addEventListener("input", function () {
+    let value = searchInput.value.toLowerCase();
+
+    let filtered = students.filter(student =>
+        student.name.toLowerCase().includes(value) ||
+        student.department.toLowerCase().includes(value) ||
+        student.age.toString().includes(value)
+    );
+
+    displayStudents(filtered);
 });
